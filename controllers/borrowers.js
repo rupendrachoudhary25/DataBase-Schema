@@ -10,6 +10,16 @@ export async function getBorrowers(req, res) {
   }
 }
 
+export async function getBorrowerById(req, res) {
+  try {
+    const BorrowersOne = await BorrowersModel.findById(req.params.id);
+    console.log(BorrowersOne);
+    res.status(201).send(" Get One Borrower Sucessful");
+  } catch (err) {
+    res.status(500).json({ message: "Failed" });
+  }
+}
+
 export async function createBorrower(req, res) {
   try {
     const newBorrower = new BorrowersModel(req.body);
@@ -22,12 +32,29 @@ export async function createBorrower(req, res) {
 
 export async function deleteBorrower(req, res) {
   try {
-    const { id } = req.params;
-    const deletedBorrower = await BorrowersModel.findByIdAndDelete(id);
+    const deletedBorrower = await BorrowersModel.findByIdAndDelete(
+      req.params.id
+    );
     if (!deletedBorrower) {
       return res.status(404).send("Borrower not found");
     }
     res.send("Borrower Deleted");
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+export async function UpdateBorrower(req, res) {
+  try {
+    const UpdateBorrower = await BorrowersModel.findByIdAndUpdate(
+      req.params.id,
+      req.body
+    );
+
+    if (!UpdateBorrower) {
+      return res.status(404).send("Borrower not found");
+    }
+    res.send("Borrower Updated");
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

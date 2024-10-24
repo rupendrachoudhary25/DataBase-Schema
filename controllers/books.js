@@ -10,6 +10,16 @@ export async function getBooks(req, res) {
   }
 }
 
+export async function getBookById(req, res) {
+  try {
+    const BooksOne = await BooksModel.findById(req.params.id);
+    console.log(BooksOne);
+    res.status(201).send(" Get One Book Sucessful");
+  } catch (err) {
+    res.status(500).json({ message: "Failed" });
+  }
+}
+
 export async function createBook(req, res) {
   try {
     const newBook = new BooksModel(req.body);
@@ -22,12 +32,27 @@ export async function createBook(req, res) {
 
 export async function deleteBook(req, res) {
   try {
-    const { id } = req.params;
-    const deletedBook = await BooksModel.findByIdAndDelete(id);
+    const deletedBook = await BooksModel.findByIdAndDelete(req.params.id);
     if (!deletedBook) {
       return res.status(404).send("Book not found");
     }
     res.send("Book Deleted");
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+export async function UpdateBook(req, res) {
+  try {
+    const UpdateBook = await BooksModel.findByIdAndUpdate(
+      req.params.id,
+      req.body
+    );
+
+    if (!UpdateBook) {
+      return res.status(404).send("Book not found");
+    }
+    res.send("Book Updated");
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
